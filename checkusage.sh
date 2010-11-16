@@ -28,7 +28,7 @@ DATE="$MONTH/$DAY/$YEAR"
 OUTPUT=`vnstat -d | grep $DATE | cut -d\| -f3`
 AMOUNT=$(echo $OUTPUT | cut -d" " -f1 | cut -d"." -f1)
 UNIT=$(echo $OUTPUT | cut -d" " -f2)
-IF=`ifconfig eth1 | grep HWaddr | cut -d":" -f7`
+IF=`ifconfig $INTERFACE | grep HWaddr | cut -d":" -f7`
 CURRENT=$(echo $IF | cut -d" " -f1)
 
 changeMac() {
