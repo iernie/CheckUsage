@@ -3,7 +3,6 @@
 # CheckUsage
 #
 # Author: iernie
-# Email: ernie@epicbytes.net
 # Version: 1.0.5
 # Date: 20101116
 # Github: https://github.com/iernie/CheckUsage
