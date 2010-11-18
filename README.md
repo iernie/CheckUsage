@@ -23,11 +23,13 @@ To add the script to check once a day simply type *crontab -e* and add the line 
 Remember to restart cron by typing */etc/init.d/cron -restart*
 
 ## Configurations
-
 * LIMIT is the limit you don't want your network usage to exceed. Based on LIMITSTR for unit.
 * LIMISTR is the unit of which the limit should be in (eg. GiB, MiB, KiB).
 * PREFIX is the 5 first numbers of the MAC address you want to use. The last two will be automatically generated if the usage exceeds the limit.
 * INTERFACE is the interface your router uses to connect to internet (wan) (eg. eth0, eth1 etc).
+
+## Commands
+* Use *force* command to force a MAC change.
 
 ## Known supported devices
 
