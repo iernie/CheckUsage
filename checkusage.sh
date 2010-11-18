@@ -3,8 +3,8 @@
 # CheckUsage
 #
 # Author: iernie
-# Version: 1.0.5
-# Date: 20101116
+# Version: 1.0.6
+# Date: 20101118
 # Github: https://github.com/iernie/CheckUsage
 
 # Dependencies: vnstat installed and running
@@ -49,15 +49,23 @@ changeMac() {
         echo "Mac Change Complete!"
 }
 
-if [ $UNIT == $LIMITSTR ]; then
-        echo "Unit is right: $LIMITSTR"
-        if [ $AMOUNT -ge $LIMIT ]; then
-                echo "Total network traffic has exceeded limit: $AMOUNT $UNIT / $LIMIT $LIMITSTR"
-                changeMac
-                ifconfig $INTERFACE
-        else
-                echo "Total network traffic has not yet exceeded the limit: $AMOUNT $UNIT / $LIMIT $LIMITSTR"
-        fi
-else
-        echo "Unit is not right: $UNIT"
-fi
+case "$1" in
+force)
+	echo "Force changing MAC..."
+	changeMac
+;;
+*)
+	if [ $UNIT == $LIMITSTR ]; then
+	        echo "Unit is right: $LIMITSTR"
+	        if [ $AMOUNT -ge $LIMIT ]; then
+	                echo "Total network traffic has exceeded limit: $AMOUNT $UNIT / $LIMIT $LIMITSTR"
+	                changeMac
+	                ifconfig $INTERFACE
+	        else
+	                echo "Total network traffic has not yet exceeded the limit: $AMOUNT $UNIT / $LIMIT $LIMITSTR"
+	        fi
+	else
+	        echo "Unit is not right: $UNIT"
+	fi
+esac
+exit 0
