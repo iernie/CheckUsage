@@ -29,7 +29,7 @@ Remember to restart cron by typing */etc/init.d/cron -restart*
 * INTERFACE is the interface your router uses to connect to internet (wan) (eg. eth0, eth1 etc).
 
 ## Commands
-* Use *force* command to force a MAC change.
+* Use *force* command to force a MAC change. (eg. /bin/checkusage.sh force)
 
 ## Known supported devices
 
