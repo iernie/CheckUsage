@@ -3,12 +3,11 @@
 # CheckUsage
 #
 # Author: iernie
-# Version: 1.1.0
-# Date: 20110821
+# Version: 1.1.1
+# Date: 20110822
 # Github: https://github.com/iernie/CheckUsage
 
 # Dependencies: vnstat installed and running
-# First run: must run the commando 'first' the first time
 
 ######################
 ### CONFIGURATIONS ###
@@ -64,16 +63,16 @@ updateLastChanged() {
 }
 
 case "$1" in
-	first)
-		getFormattedDate >> lastchange
-	;;
 	force)
 		echo "Force changing MAC..."
 		changeMac
 		updateLastChanged
 	;;
 	*)
-		LAST=`cat lastchange` 
+		if ! [[ -f lastchange ]]; then
+			getFormattedDate >> lastchange
+		fi
+		LAST=`cat lastchange`
 		DATE=`getFormattedDate`
 		if [ $DATE -gt $LAST ]; then
 			if [ $UNIT == $LIMITSTR ]; then
