@@ -3,8 +3,8 @@
 # CheckUsage
 #
 # Author: iernie
-# Version: 1.1.1
-# Date: 20110822
+# Version: 1.1.2
+# Date: 20110823
 # Github: https://github.com/iernie/CheckUsage
 
 # Dependencies: vnstat installed and running
@@ -70,7 +70,7 @@ case "$1" in
 	;;
 	*)
 		if ! [[ -f lastchange ]]; then
-			getFormattedDate >> lastchange
+			echo "19700101" >> lastchange
 		fi
 		LAST=`cat lastchange`
 		DATE=`getFormattedDate`
