@@ -17,12 +17,14 @@ What it does is check if the network usage has exceeded the set limit by getting
 * Chmod a+x to make the script executable.
 * Add the script to crontab to check as often as you like.
 
+Place the script under /usr/bin/checkusage so that you can run it without having the specify the path
+
 ## Crontab
 
-To add the script to check once a day simply type *crontab -e* and add the line *0 11 \* \* \* /bin/checkusage.sh* to use the script at 11 o'clock each day.
-Remember to restart cron by typing */etc/init.d/cron -restart*
+To add the script to check once a day simply type "crontab -e" and add the line "0 11 \* \* \* /bin/checkusage.sh* to use the script at 11 o'clock each day.
+Remember to restart cron by typing "/etc/init.d/cron restart"
 
-Since version 1.1.x checkusage now makes a file with the date of the last chagne, so the script can now be run more frequent without it changing the mac each time it checks. So a crontab could look like *\*\\15 \* \* \* \* /bin/checkusage.sh* to run it every 15th minute.
+Since version 1.1.x checkusage now makes a file with the date of the last change, so the script can now be run more frequent without it changing the mac each time it checks. So a crontab could look like "\*/15 \* \* \* \* checkusage" to run it every 15th minute.
 
 ## Configurations
 * LIMIT is the limit you don't want your network usage to exceed. Based on LIMITSTR for unit.
