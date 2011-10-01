@@ -73,7 +73,7 @@ updateLastChanged() {
 case "$1" in
 	force)
 		echo "Force changing MAC..."
-		#changeMac
+		changeMac
 		updateLastChanged
 	;;
 	*)
@@ -87,7 +87,7 @@ case "$1" in
 		DATE=`getFormattedDate`
 		if [ $UNIT == $LIMITSTR ] && [ $NUMB -gt $LASTNUMB ] && [ $DATE -gt $LASTDATE ]; then
 		    echo "Total network traffic has exceeded limit: $AMOUNT $UNIT / $LIMIT $LIMITSTR"
-		    #changeMac
+		    changeMac
 		    updateLastChanged
 		    ifconfig $INTERFACE
 		else
