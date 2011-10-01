@@ -3,8 +3,8 @@
 # CheckUsage
 #
 # Author: iernie
-# Version: 1.1.2
-# Date: 20110823
+# Version: 1.2.0
+# Date: 20111002
 # Github: https://github.com/iernie/CheckUsage
 
 # Dependencies: vnstat installed and running
@@ -20,10 +20,7 @@ INTERFACE="eth1"        # The interface for your wan
 ############
 ### CODE ###
 ############
-MONTH=`date +%m`
-YEAR=`date +%y`
-DAY=`date +%d`
-DATE="$MONTH/$DAY/$YEAR"
+DATE=`date +%D`
 OUTPUT=`vnstat -d | grep $DATE | cut -d\| -f3`
 AMOUNT=$(echo $OUTPUT | cut -d" " -f1 | cut -d"." -f1)
 UNIT=$(echo $OUTPUT | cut -d" " -f2)
@@ -49,47 +46,52 @@ changeMac() {
 	echo "Mac Change Complete!"
 }
 
+getDivisionNumber() {
+    DIV=$(($AMOUNT / $LIMIT))
+    FLOOR=$(echo $DIV | cut -d"." -f1)
+    echo "$FLOOR"
+}
+
 getFormattedDate() {
-	DATE=`date -I`
-	YEAR=$(echo $DATE | cut -d"-" -f1)
-	MONTH=$(echo $DATE | cut -d"-" -f2)
-	DAY=$(echo $DATE | cut -d"-" -f3)
+    MONTH=`date +%m`
+    YEAR=`date +%Y`
+    DAY=`date +%d`
 	echo "$YEAR$MONTH$DAY"
 }
 
+getLastChanged() {
+    NUMB=`getDivisionNumber`
+    DATE=`getFormattedDate`
+    echo "$NUMB:$DATE"
+}
+
 updateLastChanged() {
-	rm lastchange
-	getFormattedDate >> lastchange
+	rm lastchange 
+	getLastChanged >> lastchange
 }
 
 case "$1" in
 	force)
 		echo "Force changing MAC..."
-		changeMac
+		#changeMac
 		updateLastChanged
 	;;
 	*)
 		if ! [[ -f lastchange ]]; then
-			echo "19700101" >> lastchange
+			echo "0:19700101" >> lastchange
 		fi
 		LAST=`cat lastchange`
+		LASTNUMB=$(echo $LAST | cut -d":" -f1 | cut -d"." -f1)
+		NUMB=`getDivisionNumber`
+		LASTDATE=$(echo $LAST | cut -d":" -f2)
 		DATE=`getFormattedDate`
-		if [ $DATE -gt $LAST ]; then
-			if [ $UNIT == $LIMITSTR ]; then
-				echo "Unit is right: $LIMITSTR"
-				if [ $AMOUNT -ge $LIMIT ]; then
-					echo "Total network traffic has exceeded limit: $AMOUNT $UNIT / $LIMIT $LIMITSTR"
-					changeMac
-					updateLastChanged
-					ifconfig $INTERFACE
-				else
-					echo "Total network traffic has not yet exceeded the limit: $AMOUNT $UNIT / $LIMIT $LIMITSTR"
-				fi
-			else
-				echo "Unit is not right: $UNIT"
-			fi
+		if [ $UNIT == $LIMITSTR ] && [ $NUMB -gt $LASTNUMB ] && [ $DATE -gt $LASTDATE ]; then
+		    echo "Total network traffic has exceeded limit: $AMOUNT $UNIT / $LIMIT $LIMITSTR"
+		    #changeMac
+		    updateLastChanged
+		    ifconfig $INTERFACE
 		else
-			echo "MAC already changed today"
-		fi
+		    echo "Some requirements not met. Not changing mac."
+	    fi
 esac
 exit 0
