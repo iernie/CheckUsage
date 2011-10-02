@@ -3,7 +3,7 @@
 # CheckUsage
 #
 # Author: iernie
-# Version: 1.2.0
+# Version: 1.2.1
 # Date: 20111002
 # Github: https://github.com/iernie/CheckUsage
 
@@ -47,9 +47,13 @@ changeMac() {
 }
 
 getDivisionNumber() {
-    DIV=$(($AMOUNT / $LIMIT))
-    FLOOR=$(echo $DIV | cut -d"." -f1)
-    echo "$FLOOR"
+    if [ $UNIT == $LIMITSTR ]; then
+        DIV=$(($AMOUNT / $LIMIT))
+        FLOOR=$(echo $DIV | cut -d"." -f1)
+        echo "$FLOOR"
+    else
+        echo "0"
+    fi
 }
 
 getFormattedDate() {
@@ -85,13 +89,22 @@ case "$1" in
 		NUMB=`getDivisionNumber`
 		LASTDATE=$(echo $LAST | cut -d":" -f2)
 		DATE=`getFormattedDate`
-		if [ $UNIT == $LIMITSTR ] && [ $NUMB -gt $LASTNUMB ] && [ $DATE -gt $LASTDATE ]; then
-		    echo "Total network traffic has exceeded limit: $AMOUNT $UNIT / $LIMIT $LIMITSTR"
-		    changeMac
-		    updateLastChanged
-		    ifconfig $INTERFACE
+		if [ $UNIT == $LIMITSTR ]; then
+		    if [ $DATE -gt $LASTDATE ] && [ $AMOUNT -ge $LIMIT ]; then
+		        echo "Total network traffic has exceeded limit: $AMOUNT $UNIT / $LIMIT $LIMITSTR"
+		        changeMac
+		        updateLastChanged
+		        ifconfig $INTERFACE
+		    elif [ $DATE == $LASTDATE ] && [ $NUMB -gt $LASTNUMB ]; then
+		        echo "Total network traffic has once again exceeded limit: $AMOUNT $UNIT / $LIMIT $LIMITSTR"
+		        changeMac
+		        updateLastChanged
+		        ifconfig $INTERFACE
+		    else
+		        echo "Either limit not exceeded or already changed mac today."
+		    fi
 		else
-		    echo "Some requirements not met. Not changing mac."
+		    echo "Unit is not right."
 	    fi
 esac
 exit 0
